@@ -78,7 +78,41 @@ public class MatchingEngine {
     }
 
     private void matchSellOrder(Order sellOrder){
+        TreeMap<Double,Queue<Order>> buyOrders = orderBook.getBuyOrders();
 
+        while (sellOrder.getQuantity()>0 && !buyOrders.isEmpty()){
+
+            Map.Entry<Double,Queue<Order>> buyEntry = buyOrders.firstEntry();
+            double buyPrice = buyEntry.getKey();
+
+            if(buyPrice< sellOrder.getPrice())break;
+
+            Queue<Order> buyQueue = buyEntry.getValue();
+            while (sellOrder.getQuantity()>0 && !buyQueue.isEmpty()){
+                Order buyOrder = buyQueue.peek();
+                int matchQuantity = Math.min(sellOrder.getQuantity(), buyOrder.getQuantity());
+                log.info("matchSellOrder,sell_order_id:{},buy_order_id:{},match_quantity:{}",sellOrder.getId(),buyOrder.getId(),matchQuantity);
+
+                int soq = sellOrder.getQuantity()-matchQuantity;
+                int boq = buyOrder.getQuantity() -matchQuantity;
+
+                sellOrder.setQuantity(soq);
+                buyOrder.setQuantity(boq);
+
+                if(buyOrder.getQuantity()==0){
+                    buyQueue.poll();
+                }
+            }
+
+            if(buyQueue.isEmpty()){
+                buyOrders.remove(buyPrice);
+            }
+        }
+
+        if(sellOrder.getQuantity()>0){
+            log.info("matchSellOrder add to book, sell_order_id:{},quantity:{}",sellOrder.getId(),sellOrder.getQuantity());
+            orderBook.addOrder(sellOrder);
+        }
     }
 
 
