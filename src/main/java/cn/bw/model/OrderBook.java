@@ -1,7 +1,4 @@
-package cn.bw.bean;
-
-import cn.bw.OrderSide;
-import cn.bw.bean.Order;
+package cn.bw.model;
 
 import java.util.Collections;
 import java.util.LinkedList;

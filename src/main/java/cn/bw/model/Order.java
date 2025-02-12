@@ -1,6 +1,4 @@
-package cn.bw.bean;
-
-import cn.bw.OrderSide;
+package cn.bw.model;
 
 public class Order {
 
