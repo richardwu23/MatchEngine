@@ -21,6 +21,10 @@ public class MatchingEngine {
 
     private final OrderBook orderBook = new OrderBook();
 
+    public void addOrder(Order order){
+        orderBook.addOrder(order);
+    }
+
     public void processOrder(Order order){
         log.info("MatchingEngine.processOrder orderId:{}",order.getId());
         if(order.getSide()== OrderSide.BUY){
@@ -33,8 +37,17 @@ public class MatchingEngine {
     public void printOrderBook(){
         log.warn("--------- print order book ------------");
         log.warn("--------- sell order, price from low to high ------------");
-
+        for(Map.Entry<Double,Queue<Order>> entry:orderBook.getSellOrders().entrySet()){
+            for(Order order: entry.getValue()){
+                log.info("sell order:{}",order.toString());
+            }
+        }
         log.warn("--------- buy order price from high to low ------------");
+        for(Map.Entry<Double,Queue<Order>> entry:orderBook.getBuyOrders().entrySet()){
+            for(Order order: entry.getValue()){
+                log.info("buy order:{}",order.toString());
+            }
+        }
     }
 
 
